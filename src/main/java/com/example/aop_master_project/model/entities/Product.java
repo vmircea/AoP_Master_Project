@@ -6,6 +6,7 @@ import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
+import java.util.Objects;
 
 @Entity(name = "Product")
 public class Product {
@@ -57,5 +58,26 @@ public class Product {
 
     public String toString() {
         return "product '" + this.productName + "' with category '" + this.categoryName + "' and new ID: " + this.getId();
+    }
+
+    public boolean equals(final Object o) {
+        if (o == this) return true;
+        if (!(o instanceof Product)) return false;
+        final Product other = (Product) o;
+        if (!other.canEqual((Object) this)) return false;
+        final Object this$id = this.getId();
+        final Object other$id = other.getId();
+        if (!Objects.equals(this$id, other$id)) return false;
+        final Object this$productName = this.getProductName();
+        final Object other$productName = other.getProductName();
+        if (!Objects.equals(this$productName, other$productName))
+            return false;
+        final Object this$categoryName = this.getCategoryName();
+        final Object other$categoryName = other.getCategoryName();
+        return Objects.equals(this$categoryName, other$categoryName);
+    }
+
+    protected boolean canEqual(final Object other) {
+        return other instanceof Product;
     }
 }

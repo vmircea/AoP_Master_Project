@@ -6,10 +6,14 @@ import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 
 import java.util.List;
+import java.util.Optional;
 
 public interface ProductRepository extends JpaRepository<Product, String> {
 
     @Query("SELECT p FROM Product p " +
             "WHERE (:productName = '' OR p.productName LIKE CONCAT('%', :productName, '%'))")
     List<Product> getProductsByProductNameLikeSearchKey(@Param(value = "productName") String productName);
+
+    @Override
+    Optional<Product> findById(String s);
 }

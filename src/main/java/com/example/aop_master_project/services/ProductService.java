@@ -30,4 +30,9 @@ public class ProductService {
                 .map(ProductDto::convertProductToDto)
                 .collect(Collectors.toList());
     }
+
+    public Product getProductById(final String id) {
+        return productRepository.findById(id)
+                .orElseThrow(() -> new RuntimeException("Product could not be found for " + id));
+    }
 }
