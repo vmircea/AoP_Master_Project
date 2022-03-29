@@ -3,7 +3,6 @@ package com.example.aop_master_project.services;
 import com.example.aop_master_project.model.dto.AuthenticateRequest;
 import com.example.aop_master_project.model.entities.UserData;
 import com.example.aop_master_project.repositories.UserDataRepository;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
 import java.util.UUID;
