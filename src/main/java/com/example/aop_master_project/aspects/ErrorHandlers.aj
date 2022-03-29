@@ -7,8 +7,8 @@ import org.springframework.http.ResponseEntity;
 
 public aspect ErrorHandlers {
 
-    after() throwing(Throwable e) : execution(* com.example.aop_master_project.controllers.**.*(..)) {
-        System.out.println("Exception on " + thisJoinPoint.getSignature().getName() + ". Error message: " + e.getMessage());
+    after() throwing(Throwable t) : execution(* com.example.aop_master_project.controllers.**.*(..)) {
+        System.out.println("Exception on " + thisJoinPoint.getSignature().getName() + ". Error message: " + t.getMessage());
     }
 
     ResponseEntity around() : execution(ResponseEntity *(..)) {

@@ -38,6 +38,12 @@ public class InventoryStockService {
                 .filter(s -> s.getProduct().equals(product))
                 .findFirst();
 
+        InventoryStock inventoryStock = buildNewStock(stockRequest, inventory, product, stockOpt);
+        inventoryStockRepository.save(inventoryStock);
+        return inventoryService.getStockResponses(inventory);
+    }
+
+    private InventoryStock buildNewStock(StockRequest stockRequest, Inventory inventory, Product product, Optional<InventoryStock> stockOpt) {
         InventoryStock inventoryStock;
         if (stockOpt.isPresent()) {
             inventoryStock = stockOpt.get();
@@ -46,8 +52,7 @@ public class InventoryStockService {
             inventoryStock = new InventoryStock(UUID.randomUUID().toString(), stockRequest.getAmount(), inventory, product);
             inventory.getStocks().add(inventoryStock);
         }
-        inventoryStockRepository.save(inventoryStock);
-        return inventoryService.getStockResponses(inventory);
+        return inventoryStock;
     }
 
     @Transactional
