@@ -51,4 +51,8 @@ public class UserData {
     public void setPassword(String password) {
         this.password = password;
     }
+
+    public String toString() {
+        return "user with name " + this.username;
+    }
 }

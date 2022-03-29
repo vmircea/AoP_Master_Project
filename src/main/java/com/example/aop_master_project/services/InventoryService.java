@@ -1,5 +1,7 @@
 package com.example.aop_master_project.services;
 
+import com.example.aop_master_project.exceptions.InventoryNotFoundException;
+import com.example.aop_master_project.model.dto.InventoryDto;
 import com.example.aop_master_project.model.dto.ProductDto;
 import com.example.aop_master_project.model.dto.StockResponse;
 import com.example.aop_master_project.model.entities.Inventory;
@@ -21,7 +23,7 @@ public class InventoryService {
         this.inventoryRepository = inventoryRepository;
     }
 
-    public void saveInventory(final String inventoryName) {
+    public InventoryDto saveInventory(final String inventoryName) {
         Optional<Inventory> similarInventory = inventoryRepository.findAll().stream()
                 .filter(i -> i.getInventoryBranch().equals(inventoryName))
                 .findFirst();
@@ -29,7 +31,14 @@ public class InventoryService {
             throw new RuntimeException("Inventory with name " + inventoryName + " already exists");
         }
         Inventory inventory = new Inventory(UUID.randomUUID().toString(), inventoryName, List.of());
-        inventoryRepository.save(inventory);
+        Inventory saved = inventoryRepository.save(inventory);
+        return InventoryDto.mapInventoryToDto(saved);
+    }
+
+    public List<InventoryDto> getAllInventories() {
+        return inventoryRepository.findAll().stream()
+                .map(InventoryDto::mapInventoryToDto)
+                .collect(Collectors.toList());
     }
 
     public List<StockResponse> getAllStocksOfInventory(final String inventoryId) {
@@ -45,7 +54,7 @@ public class InventoryService {
 
     public Inventory getById(final String id) {
         return inventoryRepository.findById(id)
-                .orElseThrow(() -> new RuntimeException("Inventory could not be found for " + id));
+                .orElseThrow(() -> new InventoryNotFoundException("Inventory could not be found for " + id));
     }
 
     private StockResponse buildStockResponseFromStock(InventoryStock inventoryStock) {

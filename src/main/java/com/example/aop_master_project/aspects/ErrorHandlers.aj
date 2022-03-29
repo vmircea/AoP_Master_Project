@@ -1,27 +1,24 @@
 package com.example.aop_master_project.aspects;
 
+import com.example.aop_master_project.exceptions.InventoryNotFoundException;
+import com.example.aop_master_project.exceptions.NotInStockException;
+import com.example.aop_master_project.exceptions.ProductNotFoundException;
 import org.springframework.http.ResponseEntity;
 
 public aspect ErrorHandlers {
 
-    pointcut catchError(RuntimeException e): args(e) && handler(RuntimeException);
-
-    //    after(RuntimeException e) : catchError(e) {
-//        System.out.println("Teeeeeeeeeeeeeest");
-//        System.out.println(e.getMessage());
-//    }
-
     after() throwing(Throwable e) : execution(* com.example.aop_master_project.controllers.**.*(..)) {
-        System.out.println(thisJoinPoint.getSignature());
-        System.out.println("Teeeeest");
+        System.out.println("Exception on " + thisJoinPoint.getSignature().getName() + ". Error message: " + e.getMessage());
     }
 
     ResponseEntity around() : execution(ResponseEntity *(..)) {
-        System.out.println("Hello");
         try {
             return proceed();
-        } catch (Throwable t) {
-            return ResponseEntity.badRequest().body(t.getMessage());
+        } catch (NotInStockException | InventoryNotFoundException | ProductNotFoundException e) {
+            return ResponseEntity.badRequest().body(e.getMessage());
+        }
+        catch (Throwable t) {
+            return ResponseEntity.internalServerError().body(t.getMessage());
         }
     }
 

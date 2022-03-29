@@ -1,5 +1,6 @@
 package com.example.aop_master_project.services;
 
+import com.example.aop_master_project.exceptions.ProductNotFoundException;
 import com.example.aop_master_project.model.dto.ProductDto;
 import com.example.aop_master_project.model.dto.ProductSaveRequest;
 import com.example.aop_master_project.model.entities.Product;
@@ -33,6 +34,6 @@ public class ProductService {
 
     public Product getProductById(final String id) {
         return productRepository.findById(id)
-                .orElseThrow(() -> new RuntimeException("Product could not be found for " + id));
+                .orElseThrow(() -> new ProductNotFoundException("Product could not be found for " + id));
     }
 }

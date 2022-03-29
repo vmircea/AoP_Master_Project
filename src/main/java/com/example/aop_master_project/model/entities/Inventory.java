@@ -56,4 +56,8 @@ public class Inventory {
     public void setStocks(List<InventoryStock> stocks) {
         this.stocks = stocks;
     }
+
+    public String toString() {
+        return "Inventory with name " + this.getInventoryBranch();
+    }
 }

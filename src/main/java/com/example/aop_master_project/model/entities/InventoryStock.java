@@ -70,4 +70,9 @@ public class InventoryStock {
     public void setProduct(Product product) {
         this.product = product;
     }
+
+    public String toString() {
+        return "Stock with product name " + this.getProduct().getProductName() + " and new amount " + this.getAmount()
+                + " to inventory " + this.getInventory().getInventoryBranch();
+    }
 }

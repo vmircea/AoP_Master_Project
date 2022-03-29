@@ -1,5 +1,6 @@
 package com.example.aop_master_project.controllers;
 
+import com.example.aop_master_project.model.dto.InventoryDto;
 import com.example.aop_master_project.model.dto.StockRequest;
 import com.example.aop_master_project.model.dto.StockResponse;
 import com.example.aop_master_project.services.InventoryService;
@@ -28,16 +29,21 @@ public class InventoryController {
     }
 
     @PostMapping
-    public void createInventory(@RequestParam String inventoryName) {
-        inventoryService.saveInventory(inventoryName);
+    public ResponseEntity<InventoryDto> createInventory(@RequestParam String inventoryName) {
+        return ResponseEntity.ok(inventoryService.saveInventory(inventoryName));
+    }
+
+    @GetMapping("/list")
+    public ResponseEntity<List<InventoryDto>> getAllInventoriesForDropdown() {
+        return ResponseEntity.ok(inventoryService.getAllInventories());
     }
 
     @PutMapping("/{inventoryId}/add/product")
-    public List<StockResponse> addProductsToInventoryStockAndUpdateAmount(@PathVariable String inventoryId,
+    public ResponseEntity<List<StockResponse>> addProductsToInventoryStockAndUpdateAmount(@PathVariable String inventoryId,
                                                                           @RequestParam String productId,
                                                                           @RequestParam int amount) {
         StockRequest stockRequest = new StockRequest(inventoryId, productId, amount);
-        return inventoryStockService.updateStockByAddingProductAmount(stockRequest);
+        return ResponseEntity.ok(inventoryStockService.updateStockByAddingProductAmount(stockRequest));
     }
 
     @PutMapping("/{inventoryId}/remove/product")
@@ -45,12 +51,11 @@ public class InventoryController {
                                                                           @RequestParam String productId,
                                                                           @RequestParam int amount) {
         StockRequest stockRequest = new StockRequest(inventoryId, productId, amount);
-        var list = inventoryStockService.updateStockByRemovingProductAmount(stockRequest);
-        return ResponseEntity.ok(list);
+        return ResponseEntity.ok(inventoryStockService.updateStockByRemovingProductAmount(stockRequest));
     }
 
     @GetMapping("/{inventoryId}/stocks")
-    public List<StockResponse> getInventoryStocks(@PathVariable String inventoryId) {
-        return inventoryService.getAllStocksOfInventory(inventoryId);
+    public ResponseEntity<List<StockResponse>> getInventoryStocks(@PathVariable String inventoryId) {
+        return ResponseEntity.ok(inventoryService.getAllStocksOfInventory(inventoryId));
     }
 }

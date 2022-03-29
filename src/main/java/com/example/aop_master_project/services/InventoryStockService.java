@@ -62,6 +62,7 @@ public class InventoryStockService {
 
         int amount = stock.getAmount() - stockRequest.getAmount();
         if (amount <= 0) {
+            stock.setAmount(0);
             inventory.getStocks().remove(stock);
             inventoryStockRepository.delete(stock);
         } else {

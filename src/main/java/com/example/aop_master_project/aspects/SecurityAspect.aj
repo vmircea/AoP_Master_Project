@@ -23,9 +23,9 @@ public aspect SecurityAspect {
             call(* com.example.aop_master_project.services.InventoryStockService.updateStock*(..));
 
 
-    void around() : serviceSave() {
+    Object around() : serviceSave() {
         checkRequestToken();
-        proceed();
+        return proceed();
     }
 
     Object around() : inventoryUpdate() {
@@ -34,7 +34,7 @@ public aspect SecurityAspect {
     }
 
     void checkRequestToken() throws ResponseStatusException {
-        System.out.println("Check token");
+        System.out.println("Checking token...");
         ServletRequestAttributes attributes = (ServletRequestAttributes)
                 RequestContextHolder.getRequestAttributes();
         HttpServletRequest request = attributes.getRequest();
