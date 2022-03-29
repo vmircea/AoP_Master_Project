@@ -4,6 +4,7 @@ import com.example.aop_master_project.model.dto.StockRequest;
 import com.example.aop_master_project.model.dto.StockResponse;
 import com.example.aop_master_project.services.InventoryService;
 import com.example.aop_master_project.services.InventoryStockService;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -33,18 +34,19 @@ public class InventoryController {
 
     @PutMapping("/{inventoryId}/add/product")
     public List<StockResponse> addProductsToInventoryStockAndUpdateAmount(@PathVariable String inventoryId,
-                                                           @RequestParam String productId,
-                                                           @RequestParam int amount) {
+                                                                          @RequestParam String productId,
+                                                                          @RequestParam int amount) {
         StockRequest stockRequest = new StockRequest(inventoryId, productId, amount);
         return inventoryStockService.updateStockByAddingProductAmount(stockRequest);
     }
 
     @PutMapping("/{inventoryId}/remove/product")
-    public List<StockResponse> removeProductsFromInventoryStockAndUpdateAmount(@PathVariable String inventoryId,
-                                                                @RequestParam String productId,
-                                                                @RequestParam int amount) {
+    public ResponseEntity<List<StockResponse>> removeProductsFromInventoryStockAndUpdateAmount(@PathVariable String inventoryId,
+                                                                          @RequestParam String productId,
+                                                                          @RequestParam int amount) {
         StockRequest stockRequest = new StockRequest(inventoryId, productId, amount);
-        return inventoryStockService.updateStockByRemovingProductAmount(stockRequest);
+        var list = inventoryStockService.updateStockByRemovingProductAmount(stockRequest);
+        return ResponseEntity.ok(list);
     }
 
     @GetMapping("/{inventoryId}/stocks")

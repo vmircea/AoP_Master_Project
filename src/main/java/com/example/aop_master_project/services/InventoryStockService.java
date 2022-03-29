@@ -1,5 +1,6 @@
 package com.example.aop_master_project.services;
 
+import com.example.aop_master_project.exceptions.NotInStockException;
 import com.example.aop_master_project.model.dto.StockRequest;
 import com.example.aop_master_project.model.dto.StockResponse;
 import com.example.aop_master_project.model.entities.Inventory;
@@ -57,7 +58,7 @@ public class InventoryStockService {
         InventoryStock stock = inventory.getStocks().stream()
                 .filter(s -> s.getProduct().equals(product))
                 .findFirst()
-                .orElseThrow(() -> new RuntimeException("Product could not be found in the stock"));
+                .orElseThrow(() -> new NotInStockException("Product could not be found in the stock"));
 
         int amount = stock.getAmount() - stockRequest.getAmount();
         if (amount <= 0) {
