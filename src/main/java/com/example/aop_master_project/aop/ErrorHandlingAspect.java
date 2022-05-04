@@ -16,7 +16,7 @@ import org.springframework.stereotype.Component;
 @Slf4j
 public class ErrorHandlingAspect {
 
-    @Around("execution(* com.example.aop_master_project.controllers.*.*(..))")
+    @Around("execution(org.springframework.http.ResponseEntity com.example.aop_master_project.controllers.*.*(..))")
     public ResponseEntity handleExceptions(ProceedingJoinPoint joinPoint) {
         try {
             return (ResponseEntity) joinPoint.proceed();
