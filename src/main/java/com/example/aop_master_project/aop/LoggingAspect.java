@@ -1,5 +1,6 @@
 package com.example.aop_master_project.aop;
 
+import lombok.extern.slf4j.Slf4j;
 import org.aspectj.lang.ProceedingJoinPoint;
 import org.aspectj.lang.annotation.Around;
 import org.aspectj.lang.annotation.Aspect;
@@ -10,16 +11,16 @@ import java.time.Instant;
 
 @Aspect
 @Component
+@Slf4j
 public class LoggingAspect {
-
     @Around("execution(* com.example.aop_master_project.controllers.*.*(..))")
     public Object log(ProceedingJoinPoint joinPoint) throws Throwable {
-        System.out.println("Start endpoint " + joinPoint.getSignature() + ".");
+        log.info("Start endpoint {} .", joinPoint.getSignature());
         Instant start = Instant.now();
         Object proceed = joinPoint.proceed();
         Instant finish = Instant.now();
         long timeElapsed = Duration.between(start, finish).toMillis();
-        System.out.println("End call after " + timeElapsed + " milliseconds.");
+        log.info("End call after {} milliseconds.", timeElapsed);
         return proceed;
     }
 }
