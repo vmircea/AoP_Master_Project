@@ -31,7 +31,7 @@ public aspect LogSaveAspect {
         return proceed;
     }
 
-//    before(Object o) : args(o) && execution (private * com.example.aop_master_project.services.**.build*(..)) {
-//        System.out.println("Mapping object " + o.toString());
-//    }
+    before(Object o) : args(o) && execution (private * com.example.aop_master_project.services.**.build*(..)) {
+        System.out.println("Mapping object " + o.toString());
+    }
 }

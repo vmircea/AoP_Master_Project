@@ -9,6 +9,7 @@ import com.example.aop_master_project.model.dto.AuthenticateRequest;
 import com.example.aop_master_project.services.UserDataService;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -46,7 +47,7 @@ public class AuthenticationController {
     }
 
     @PostMapping("/login")
-    public String Login(@RequestBody AuthenticateRequest user) {
+    public ResponseEntity<String> Login(@RequestBody AuthenticateRequest user) {
         if(!userService.userWithPasswordExists(user)) {
             throw new ResponseStatusException(HttpStatus.UNAUTHORIZED, "Username or password is wrong");
         }
@@ -56,7 +57,7 @@ public class AuthenticationController {
             String token = JWT.create()
                     .withClaim("Name", user.getUsername())
                     .sign(algorithm);
-            return token;
+            return ResponseEntity.ok(token);
         } catch (JWTCreationException exception){
             throw new ResponseStatusException(HttpStatus.INTERNAL_SERVER_ERROR);
         }

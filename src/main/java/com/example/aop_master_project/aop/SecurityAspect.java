@@ -1,42 +1,40 @@
-package com.example.aop_master_project.aspects;
+package com.example.aop_master_project.aop;
 
 import com.auth0.jwt.JWT;
 import com.auth0.jwt.JWTVerifier;
 import com.auth0.jwt.algorithms.Algorithm;
 import com.auth0.jwt.exceptions.JWTVerificationException;
-import com.example.aop_master_project.services.ProductService;
+import org.aspectj.lang.ProceedingJoinPoint;
+import org.aspectj.lang.annotation.Around;
+import org.aspectj.lang.annotation.Aspect;
 import org.springframework.http.HttpStatus;
+import org.springframework.stereotype.Component;
 import org.springframework.web.context.request.RequestContextHolder;
 import org.springframework.web.context.request.ServletRequestAttributes;
 import org.springframework.web.server.ResponseStatusException;
 
 import javax.servlet.http.HttpServletRequest;
 
-public aspect SecurityAspect {
+@Aspect
+@Component
+public class SecurityAspect {
 
-    pointcut serviceSave():
-            call(* com.example.aop_master_project.services.InventoryService.save*(..)) ||
-            call(* com.example.aop_master_project.services.InventoryStockService.save*(..)) ||
-            call(* com.example.aop_master_project.services.ProductService.save*(..));
-
-    pointcut inventoryUpdate():
-            call(* com.example.aop_master_project.services.InventoryStockService.updateStock*(..));
-
-
-
-
-    Object around() : serviceSave() {
+    @Around(value = "execution(* com.example.aop_master_project.services.InventoryService.save*(..)) ||" +
+            "execution(* com.example.aop_master_project.services.InventoryStockService.save*(..)) ||" +
+            "execution(* com.example.aop_master_project.services.ProductService.save*(..))")
+    private Object checkTokenBeforeSaving(ProceedingJoinPoint pjp) throws Throwable {
         checkRequestToken();
-        return proceed();
+        return pjp.proceed();
     }
 
-    Object around() : inventoryUpdate() {
+    @Around(value = "execution(* com.example.aop_master_project.services.InventoryStockService.updateStock*(..))")
+    private Object checkTokenBeforeInventoryUpdate(ProceedingJoinPoint pjp) throws Throwable {
         checkRequestToken();
-        return proceed();
+        return pjp.proceed();
     }
 
     void checkRequestToken() throws ResponseStatusException {
-//        System.out.println("Checking token...");
+        System.out.println("[SpringAOP] Checking token...");
         ServletRequestAttributes attributes = (ServletRequestAttributes)
                 RequestContextHolder.getRequestAttributes();
         HttpServletRequest request = attributes.getRequest();
