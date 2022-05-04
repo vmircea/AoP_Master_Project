@@ -1,6 +1,7 @@
 package com.example.aop_master_project.services;
 
 import com.example.aop_master_project.exceptions.NotInStockException;
+import com.example.aop_master_project.model.ValidationCheck;
 import com.example.aop_master_project.model.dto.StockRequest;
 import com.example.aop_master_project.model.dto.StockResponse;
 import com.example.aop_master_project.model.entities.Inventory;
@@ -30,6 +31,7 @@ public class InventoryStockService {
     }
 
     @Transactional
+    @ValidationCheck
     public List<StockResponse> updateStockByAddingProductAmount(StockRequest stockRequest) {
         Inventory inventory = inventoryService.getById(stockRequest.getInventoryId());
         Product product = productService.getProductById(stockRequest.getProductId());
@@ -56,6 +58,7 @@ public class InventoryStockService {
     }
 
     @Transactional
+    @ValidationCheck
     public List<StockResponse> updateStockByRemovingProductAmount(StockRequest stockRequest) {
         Inventory inventory = inventoryService.getById(stockRequest.getInventoryId());
         Product product = productService.getProductById(stockRequest.getProductId());
