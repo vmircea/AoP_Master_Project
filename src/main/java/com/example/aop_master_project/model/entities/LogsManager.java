@@ -14,4 +14,8 @@ public class LogsManager {
     public static void info(String message) {
         log.info(message);
     }
+
+    public static void print(String message) {
+        System.out.println(message);
+    }
 }

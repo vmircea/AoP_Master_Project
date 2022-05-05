@@ -29,24 +29,47 @@ public class LoggingAspect {
     public void logDelete(Object o) {
     }
 
+    @Pointcut("execution(* com.example.aop_master_project.services.UserDataService.saveUser(..))")
+    public void logUserSaved() {
+    }
+
     @After("logNewSave(o)")
     public void afterAdvice(JoinPoint joinPoint, Object o) {
         Signature signature = joinPoint.getSignature();
-        String message = signature.getName().toUpperCase() + " ";
+        logsManager.print("Saving Item New Inventory");
+        String message = signature.getName().toUpperCase() + " {}";
         logsManager.info(message, o.toString());
     }
 
     @After("logDelete(o)")
     public void afterAdvice2(JoinPoint joinPoint, Object o) {
         Signature signature = joinPoint.getSignature();
-        String message = signature.getName().toUpperCase() + " ";
+        logsManager.print("Deleted item from List");
+        String message = signature.getName().toUpperCase() + " {}";
         logsManager.info(message, o.toString());
     }
 
-    @Before("execution(private * com.example.aop_master_project.services.*.build*(..)) && args(o)")
-    public void beforeAdvice(Object o) {
-        System.out.println("Mapping object " + o.toString());
+    @Before("logUserSaved()")
+    public void beforeAdvice1(JoinPoint joinPoint) {
+        Signature signature = joinPoint.getSignature();
+        logsManager.print("Attempt to save user");
+        String message = signature.getName().toUpperCase();
+        logsManager.info(message);
     }
+
+    @After("logUserSaved()")
+    public void afterAdvice3(JoinPoint joinPoint) {
+        Signature signature = joinPoint.getSignature();
+        logsManager.print("Saved New User");
+        String message = signature.getName().toUpperCase();
+        logsManager.info(message);
+    }
+
+//    @Before("execution(private * com.example.aop_master_project.services.*.build*(..)) && args(o)")
+//    public void beforeAdvice(Object o) {
+//        logsManager.print("Mapping object " + o.toString());
+//    }
+
     @Around("execution(* com.example.aop_master_project.controllers.*.*(..))")
     public Object log(ProceedingJoinPoint joinPoint) throws Throwable {
         logsManager.info("Start endpoint {} .", String.valueOf(joinPoint.getSignature()));
